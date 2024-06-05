@@ -5,14 +5,15 @@ using TestePB.Domain.CasoDeUsos;
 using TestePB.Domain.Entity;
 using TestePB.Domain.Enum;
 using TestePB.Domain.Interfaces;
+using Xunit;
 
-namespace Teste.Domain;
+namespace Teste.Domain.CasoDeUso;
 
-public class CriarClienteTeste
+public class CriarClienteCasoDeUsoTeste
 {
     private readonly IClienteRepositorio _clienteRepositorio;
 
-    public CriarClienteTeste()
+    public CriarClienteCasoDeUsoTeste()
     {
         _clienteRepositorio = Substitute.For<IClienteRepositorio>();
     }
@@ -31,23 +32,23 @@ public class CriarClienteTeste
         var telefoneFixo = "9832324242";
         var tipoDeTelefoneFixo = TipoTelefone.Fixo;
 
-        var contatosTelefoneCelular = Contatos.Criar(telefone, tipoDeTelefone);
-        var contatosTelefoneFixo = Contatos.Criar(telefoneFixo, tipoDeTelefoneFixo);
+        var contatosTelefoneCelular = Contato.Criar(telefone, tipoDeTelefone);
+        var contatosTelefoneFixo = Contato.Criar(telefoneFixo, tipoDeTelefoneFixo);
 
-        var cliente = Cliente.Criar(nome, email, new List<Contatos>()
+        var cliente = Cliente.Criar(nome, email, new List<Contato>()
         {
             contatosTelefoneCelular,
             contatosTelefoneFixo
         });
         
         //act
-        var casoUso = new CriarCliente(_clienteRepositorio);
+        var casoUso = new CriarClienteCasoDeUso(_clienteRepositorio);
 
-        var resultado=await casoUso.CriaCliente(nome, email, new List<Contatos>()
+        var resultado=await casoUso.CriaCliente(nome, email, new List<Contato>()
         {
             contatosTelefoneCelular,
             contatosTelefoneFixo
-        });
+        },CancellationToken.None);
         //assert
        
       resultado.Contatos.ShouldBe(cliente.Contatos);
@@ -73,21 +74,21 @@ public class CriarClienteTeste
         var telefoneFixo = "9832324242";
         var tipoDeTelefoneFixo = TipoTelefone.Fixo;
 
-        var contatosTelefoneCelular = Contatos.Criar(telefone, tipoDeTelefone);
-        var contatosTelefoneFixo = Contatos.Criar(telefoneFixo, tipoDeTelefoneFixo);
+        var contatosTelefoneCelular = Contato.Criar(telefone, tipoDeTelefone);
+        var contatosTelefoneFixo = Contato.Criar(telefoneFixo, tipoDeTelefoneFixo);
         
         
         //act
-        var casoUso = new CriarCliente(_clienteRepositorio);
+        var casoUso = new CriarClienteCasoDeUso(_clienteRepositorio);
 
    
         //assert
 
-        var result=await Should.ThrowAsync<ValidationException>(casoUso.CriaCliente(nome, email, new List<Contatos>()
+        var result=await Should.ThrowAsync<ValidationException>(casoUso.CriaCliente(nome, email, new List<Contato>()
         {
             contatosTelefoneCelular,
             contatosTelefoneFixo
-        }));
+        },CancellationToken.None));
         
         result.Errors.ShouldContain(x=>x.ErrorMessage=="Email está Inválido");
 
@@ -105,21 +106,21 @@ public class CriarClienteTeste
         var telefoneFixo = "9832324242";
         var tipoDeTelefoneFixo = TipoTelefone.Fixo;
 
-        var contatosTelefoneCelular = Contatos.Criar(telefone, tipoDeTelefone);
-        var contatosTelefoneFixo = Contatos.Criar(telefoneFixo, tipoDeTelefoneFixo);
+        var contatosTelefoneCelular = Contato.Criar(telefone, tipoDeTelefone);
+        var contatosTelefoneFixo = Contato.Criar(telefoneFixo, tipoDeTelefoneFixo);
         
         
         //act
-        var casoUso = new CriarCliente(_clienteRepositorio);
+        var casoUso = new CriarClienteCasoDeUso(_clienteRepositorio);
 
    
         //assert
 
-        var result=await Should.ThrowAsync<ValidationException>(casoUso.CriaCliente(nome, email, new List<Contatos>()
+        var result=await Should.ThrowAsync<ValidationException>(casoUso.CriaCliente(nome, email, new List<Contato>()
         {
             contatosTelefoneCelular,
             contatosTelefoneFixo
-        }));
+        },CancellationToken.None));
         
         result.Errors.ShouldContain(x=>x.ErrorMessage=="Campo obrigatário");
 
@@ -136,7 +137,7 @@ public class CriarClienteTeste
         
         //act
 
-       var result= Should.Throw<ValidationException>(() => Contatos.Criar(telefoneCelular, tipoDeTelefone));
+       var result= Should.Throw<ValidationException>(() => Contato.Criar(telefoneCelular, tipoDeTelefone));
    
         //assert
         result.Errors.ShouldContain(x=>x.ErrorMessage=="Telefone celular está inválido");
@@ -153,7 +154,7 @@ public class CriarClienteTeste
         
         //act
 
-        var result= Should.Throw<ValidationException>(() => Contatos.Criar(telefoneFixo, tipoDeTelefone));
+        var result= Should.Throw<ValidationException>(() => Contato.Criar(telefoneFixo, tipoDeTelefone));
    
         //assert
         result.Errors.ShouldContain(x=>x.ErrorMessage=="Telefone Fixo está inválido");
