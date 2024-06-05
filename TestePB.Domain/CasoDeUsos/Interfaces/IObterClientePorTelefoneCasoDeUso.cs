@@ -1,8 +1,8 @@
 ﻿using TestePB.Domain.Entity;
 
-namespace TestePB.Domain.Interfaces;
+namespace TestePB.Domain.CasoDeUsos.Interfaces;
 
-public interface IClienteRepositorio:IBaseRepositorio<Cliente,Guid>
+public interface IObterClientePorTelefoneCasoDeUso
 {
     Task<Cliente?> ObterClientePorTelefone(string numeroTelefone,CancellationToken cancellationToken);
 }
