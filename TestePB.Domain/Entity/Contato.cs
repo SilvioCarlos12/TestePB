@@ -4,25 +4,27 @@ using TestePB.Domain.Enum;
 
 namespace TestePB.Domain.Entity;
 
-public class Contatos:BaseEntidade<Guid>
+public class Contato:BaseEntidade<Guid>
 {
     public string NumeroTelefone { get; private set; } = string.Empty;
     public TipoTelefone TipoTelefone { get; private set; }
+    
+    public Cliente Cliente { get; set; }
 
-    public Contatos()
+    public Contato()
     {
         
     }
 
-    private Contatos(string numeroTelefone, TipoTelefone tipoTelefone)
+    private Contato(string numeroTelefone, TipoTelefone tipoTelefone)
     {
         NumeroTelefone = numeroTelefone;
         TipoTelefone = tipoTelefone;
     }
 
-    public static Contatos Criar(string numeroTelefone, TipoTelefone tipoTelefone)
+    public static Contato Criar(string numeroTelefone, TipoTelefone tipoTelefone)
     {   
-        var contatos = new Contatos(numeroTelefone, tipoTelefone);
+        var contatos = new Contato(numeroTelefone, tipoTelefone);
         
         GetValidador.ValidateAndThrow(contatos);
         
@@ -30,7 +32,7 @@ public class Contatos:BaseEntidade<Guid>
     }
     private static readonly ContatosValidador GetValidador=new ();
     
-    public class ContatosValidador:AbstractValidator<Contatos>
+    public class ContatosValidador:AbstractValidator<Contato>
     {
         public ContatosValidador()
         {
