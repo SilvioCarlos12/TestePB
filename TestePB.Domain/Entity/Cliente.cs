@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
 
 namespace TestePB.Domain.Entity;
 
@@ -26,15 +27,22 @@ public class Cliente:BaseEntidade<Guid>
         return cliente;
     }
     
-    private static ClienteValidador GetValidador=new ();
+    private static readonly ClienteValidador GetValidador=new ();
     public class ClienteValidador:AbstractValidator<Cliente>
     {
         public ClienteValidador()
         {
-            RuleFor(x => x.NomeCompleto).NotEmpty();
-            RuleFor(x => x.Email)
+            var regexValidarEmail = new Regex("^[a-zA-Z0-9._%+-]+(?<!\\.)@[a-zA-Z0-9]" +
+                                              "(?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\\.[a-zA-Z]{2,}$");
+            
+            RuleFor(x => x.NomeCompleto)
+                .MaximumLength(300)
+                .WithMessage("Passou de 300 caracteres")
                 .NotEmpty()
-                .EmailAddress();
+                .WithMessage("Campo obrigatário");
+            RuleFor(x => x.Email)
+                .Matches(regexValidarEmail)
+                .WithMessage("Email está Inválido");
             
         }
     }

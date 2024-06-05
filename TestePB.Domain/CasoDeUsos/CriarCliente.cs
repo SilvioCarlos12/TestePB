@@ -13,11 +13,20 @@ public class CriarCliente:ICriarCliente
         _clienteRepositorio = clienteRepositorio;
     }
 
-    public async Task CriaCliente(string nomeTelefone, string email, IEnumerable<Contatos> contatos)
+    public async Task<Cliente> CriaCliente(string nomeCompleto, string email, IEnumerable<Contatos> contatos)
     {
-        var cliente = Cliente.Criar(nomeTelefone, email, contatos);
 
-        await _clienteRepositorio.Adicionar(cliente);
+        try
+        {
+            var cliente = Cliente.Criar(nomeCompleto, email, contatos);
+            await _clienteRepositorio.Adicionar(cliente);
+            return cliente;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
 
     }
 }
