@@ -8,11 +8,11 @@ public class Cliente:BaseEntidade<Guid>
 
     public string NomeCompleto { get; private set; }
     public string Email { get; private set; }
-    public IEnumerable<Contatos> Contatos { get; private set; }
+    public IEnumerable<Contato> Contatos { get; private set; }
 
 
 
-    private Cliente(string nomeCompleto,string email,IEnumerable<Contatos> contatos) : base()
+    private Cliente(string nomeCompleto,string email,IEnumerable<Contato> contatos) : base()
     {
         NomeCompleto = nomeCompleto;
         Email = email;
@@ -20,13 +20,18 @@ public class Cliente:BaseEntidade<Guid>
     }
 
 
-    public static Cliente Criar(string nomeCompleto, string email, IEnumerable<Contatos> contatos)
+    public static Cliente Criar(string nomeCompleto, string email, IEnumerable<Contato> contatos)
     {
         var cliente = new Cliente(nomeCompleto, email, contatos);
         GetValidador.ValidateAndThrow(cliente);
         return cliente;
     }
-    
+
+    public void AtualizarEmailDoCliente(string email)
+    {
+        Email = email;
+        GetValidador.ValidateAndThrow(this);
+    }
     private static readonly ClienteValidador GetValidador=new ();
     public class ClienteValidador:AbstractValidator<Cliente>
     {
